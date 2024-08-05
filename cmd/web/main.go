@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"github.com/alexedwards/scs/v2"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/pkg/config"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/pkg/handlers"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/pkg/render"
-	"fmt"
-	"github.com/alexedwards/scs/v2"
 	"log"
 	"net/http"
 	"time"
