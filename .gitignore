@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+*.exe
+*.pdf
+*.docx
+.vscode/
+node_modules/
+*.lnk
+/Users/rohan/
+/OneDrive/
