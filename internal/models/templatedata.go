@@ -1,6 +1,6 @@
 package models
 
-import "github.com/tsawler/bookings-app/internal/forms"
+import "github.com/rohanrj3296/Bread_Butter_Bookings/internal/forms"
 
 // TemplateData holds data sent from handlers to templates
 type TemplateData struct {
