@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql/driver"
 	"encoding/gob"
 	"fmt"
 	"log"
@@ -74,6 +75,9 @@ func run() error{
 	session.Cookie.Secure = app.InProduction
 
 	app.Session = session
+	//cnnect to database
+	log.Println("Connecting To DataBase")
+	
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
