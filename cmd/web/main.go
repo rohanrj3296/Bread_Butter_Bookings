@@ -1,20 +1,20 @@
 package main
 
 import (
-	"database/sql/driver"
 	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
-
 	"github.com/alexedwards/scs/v2"
+	"github.com/rohanrj3296/Bread_Butter_Bookings/internal/driver"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/internal/config"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/internal/handlers"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/internal/helpers"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/internal/models"
 	"github.com/rohanrj3296/Bread_Butter_Bookings/internal/render"
+
 )
 
 const portNumber = ":8080"
@@ -27,10 +27,11 @@ var errorLog *log.Logger
 // main is the main function
 func main() {
 	
-	err:=run()
+	db,err:=run()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.SQL.Close()
 	
 
 	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
@@ -46,9 +47,12 @@ func main() {
 	}
 }
 
-func run() error{
+func run() (*driver.DB ,error){
 	// what am I going to put in the session
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
 
 	// change this to true when in production
 	app.InProduction = false
@@ -77,21 +81,25 @@ func run() error{
 	app.Session = session
 	//cnnect to database
 	log.Println("Connecting To DataBase")
-	
+	db,err:=driver.ConnectSQL("host=localhost port=5432 dbname=bread_butter_bookings user=postgres password=ROHANjd@3296")
+	if err!=nil{
+		log.Fatal("Cannot Connect To DataBase! Dying.....")
+	}
+	log.Println("Connected To DataBase!")
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
-		return err
+		return nil,err
 	}
 
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	repo := handlers.NewRepo(&app)
+	repo := handlers.NewRepo(&app,db)
 	handlers.NewHandlers(repo)
 
-	render.NewTemplates(&app)
+	render.NewRenderer(&app)
 	helpers.NewHelpers(&app)//this line populates the app in helpers with a pointer to app config
-	return nil
+	return db,nil
 }
