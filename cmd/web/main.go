@@ -81,7 +81,7 @@ func run() (*driver.DB ,error){
 	app.Session = session
 	//cnnect to database
 	log.Println("Connecting To DataBase")
-	db,err:=driver.ConnectSQL("host=localhost port=5432 dbname=bread_butter_bookings user=postgres password=ROHANjd@3296")
+	db,err:=driver.ConnectSQL("host=localhost port=5432 dbname=bread_butter_bookings user=postgres password=")
 	if err!=nil{
 		log.Fatal("Cannot Connect To DataBase! Dying.....")
 	}
