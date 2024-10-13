@@ -1,0 +1,207 @@
+{{template "admin" .}}
+
+{{define "css"}}
+
+<link
+  href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
+  rel="stylesheet"
+  type="text/css"
+/>
+<style>
+  .container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+  .col {
+    flex: 1;
+    padding: 15px;
+  }
+  .mt-3 {
+    margin-top: 1rem;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  .form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  .form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: none;
+  }
+  .text-danger {
+    color: #dc3545;
+  }
+  .btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+  }
+  .btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  .btn-warning {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+  }
+</style>
+{{ end }}
+
+{{define "page-title"}}
+<h3 style="padding-left: 0.4cm;">Reservation</h3>
+{{ end }}
+
+{{define "content"}}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://unpkg.com/notie/dist/notie.min.css"
+/>
+{{$res := index .Data "reservation"}}
+{{$src := index .StringMap "src"}}
+<div class="col-md-12">
+  <p>
+    <strong style="padding-left: 0.4cm;">Arrival:</strong> {{humanDate $res.StartDate}} <br />
+    <strong style="padding-left: 0.4cm;">Departure:</strong> {{humanDate $res.EndDate}} <br />
+    <strong style="padding-left: 0.4cm;">Room:</strong> {{ $res.Room.RoomName }}
+  </p>
+
+  <form
+    action="/admin/reservations/{{ $src }}/{{ $res.ID }}"
+    method="post"
+    class=""
+    novalidate
+  >
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}" />
+    <input type="hidden" name="year" value="{{index .StringMap "year"}}">
+    <input type="hidden" name="month" value="{{index .StringMap "month"}}">
+
+    <div class="form-group mt-3">
+      <label for="first_name" style="padding-left: 0.4cm;">First Name:</label>
+      {{with .Form.Errors.Get "first_name"}}
+      <label class="text-danger">{{.}}</label>
+      {{ end }}
+      <input style="padding-left: 0.4cm;" class="form-control
+      {{with .Form.Errors.Get "first_name"}} is-invalid {{ end }}"
+      id="first_name" autocomplete="off" type="text" name="first_name" value="{{
+        $res.FirstName
+      }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="last_name" style="padding-left: 0.4cm;">Last Name:</label>
+      {{with .Form.Errors.Get "last_name"}}
+      <label class="text-danger">{{.}}</label>
+      {{ end }}
+      <input style="padding-left: 0.4cm;" class="form-control
+      {{with .Form.Errors.Get "last_name"}} is-invalid {{ end }}" id="last_name"
+      autocomplete="off" type="text" name="last_name" value="{{
+        $res.LastName
+      }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email" style="padding-left: 0.4cm;" >Email:</label>
+      {{with .Form.Errors.Get "email"}}
+      <label class="text-danger">{{.}}</label>
+      {{ end }}
+      <input style="padding-left: 0.4cm;" class="form-control {{with .Form.Errors.Get "email"}} is-invalid
+      {{ end }}" id="email" autocomplete="off" type="email" name="email"
+      value="{{ $res.Email }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="phone" style="padding-left: 0.4cm;" >Phone:</label>
+      {{with .Form.Errors.Get "phone"}}
+      <label class="text-danger">{{.}}</label>
+      {{ end }}
+      <input style="padding-left: 0.4cm;" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid
+      {{ end }}" id="phone" autocomplete="off" type="text" name="phone"
+      value="{{ $res.Phone }}" required>
+    </div>
+
+    <hr />
+
+    <input type="submit" class="btn btn-primary" value="Save"  />
+
+    {{if eq $src "cal"}}
+      <a href="#!" onclick="window.history.go(-1)" class="btn btn-warning">Cancel</a>
+
+    {{else}}
+    <a href="/admin/reservations-{{ $src }}" class="btn btn-warning" >Cancel</a>
+    {{end}}
+    {{if eq  $res.Processed 0}}
+      <a href="#!" class="btn btn-info" style="display: inline-block; visibility: visible; background: #007bff; margin-right: 22cm;" onclick="processRes({{ $res.ID }})">Mark As Processed</a>
+    {{end}}
+    <div style="float: right;">
+      <a href="#!" class="btn btn-danger" onclick="deleteRes({{ $res.ID }})" style="background: red;">Delete Reservation</a>
+    </div>
+    
+    
+
+    
+  </form>
+</div>
+{{ end }}
+
+{{define "js"}}
+{{$src := index .StringMap "src"}}
+<script>
+  function processRes(id) {
+    attention.custom({
+      icon: "warning",
+      msg: "Are You Sure?",
+      callback: function (result) {
+        if (result !== false) {
+          window.location.href = "/admin/process-reservation/{{$src}}/" + id+"/do?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
+        }
+      },
+    });
+  }
+
+  function deleteRes(id) {
+    attention.custom({
+      icon: "warning",
+      msg: "Are You Sure?",
+      callback: function (result) {
+        if (result !== false) {
+          window.location.href = "/admin/delete-reservation/{{$src}}/" + id+"/do?y={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
+        }
+      },
+    });
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/notie"></script>
+
+{{ end }}

@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	
+	"time"
+)
 
 // User is the user table model
 type User struct {
@@ -42,7 +45,8 @@ type Reservation struct {
 	RoomID    int
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Room      Room //we dont have to put the fields exactly as they exist in database table
+	Room      Room
+	Processed int //we dont have to put the fields exactly as they exist in database table
 	//we have RoomID which implies that we also have a room associateed with this
 	//so Room of type Rooms.That means all of the room info is included in the room associated with the reservation
 }
@@ -60,4 +64,13 @@ type RoomRestriction struct {
 	Room          Room
 	Reservation   Reservation
 	Restriction   Restriction
+}
+
+//struct to hold email essentials
+type MailData struct{
+	To string
+	From string
+	Subject string
+	Content string
+	Template string
 }
