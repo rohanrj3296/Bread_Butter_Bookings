@@ -1,0 +1,1 @@
+delete from  users where email=' rohanjadhavrj3296@gmail.com';

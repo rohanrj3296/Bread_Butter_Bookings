@@ -19,10 +19,27 @@ func listenForMail() {
 
 	}()
 }
+
+/*
+
+server := mail.NewSMTPClient()
+server.Host = "smtp.gmail.com"
+server.Port = 587 // TLS/STARTTLS port
+server.Username = "your-gmail-username@gmail.com"
+server.Password = "your-app-password" // App-specific password
+server.Encryption = mail.EncryptionSTARTTLS
+
+
+
+*/
+
 func sendMsg(m models.MailData) {
 	server := mail.NewSMTPClient()
-	server.Host = "localhost"
-	server.Port = 1025
+	server.Host = "smtp.gmail.com"
+	server.Port = 587
+	server.Username = "rohanjadhav32963296@gmail.com"
+	server.Password = "kxkl pjkw jful zycz"
+	server.Encryption = mail.EncryptionSTARTTLS
 	server.KeepAlive = false
 	server.ConnectTimeout = 10 * time.Second
 	server.SendTimeout = 10 * time.Second
