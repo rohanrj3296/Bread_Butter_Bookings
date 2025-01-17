@@ -37,8 +37,8 @@ func sendMsg(m models.MailData) {
 	server := mail.NewSMTPClient()
 	server.Host = "smtp.gmail.com"
 	server.Port = 587
-	server.Username = "rohanjadhav3@gmail.com"
-	server.Password = "kxkl pjkw jful zyc"
+	server.Username = "yourname@yourmail.com"
+	server.Password = "password"
 	server.Encryption = mail.EncryptionSTARTTLS
 	server.KeepAlive = false
 	server.ConnectTimeout = 10 * time.Second
